@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="initial-scale=1.0, width=device-width, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="translucent-black">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Not Web Map</title>
+
+    <link rel="stylesheet" href="http://js.arcgis.com/3.13/esri/css/esri.css">
+    <style>
+      html, body, #mapDiv {
+        height: 100%;
+        margin: 0px;
+        padding: 0px;
+        width: 100%;
+      }
+    </style>
+
+    <script src="http://js.arcgis.com/3.13/"></script>
+    <script>
+      require([
+        "esri/map",
+        "esri/geometry/Extent",
+        "esri/SpatialReference",
+        "esri/layers/ArcGISImageServiceLayer",
+        "esri/layers/FeatureLayer",
+        "esri/symbols/SimpleMarkerSymbol",
+        "esri/symbols/SimpleLineSymbol",
+        "esri/Color",
+        "esri/renderers/ClassBreaksRenderer",
+        "esri/dijit/PopupTemplate",
+
+        "dojo/domReady!"
+      ], function(Map, Extent, SpatialReference, ArcGISImageServiceLayer, FeatureLayer, SimpleMarkerSymbol, SimpleLineSymbol, Color, ClassBreaksRenderer, PopupTemplate) {
+
+        // マップの初期表示範囲
+        var initExtent = new Extent(139.5932, 35.6877, 139.6477, 35.7169, new SpatialReference({ wkid: 4326 }));
+        
+        // マップ
+        var map = new Map("mapDiv", {
+          basemap: "streets",
+          extent: initExtent
+        });
+
+        // レイヤー1: 首都直下地震の被害想定
+        // ArcGISImageServiceLayer: 画像の配信サービス表示用のレイヤー（画像）
+        var layer1 = new ArcGISImageServiceLayer("http://54.248.116.77/arcgis/rest/services/Capital_earthquake/liq_toshin/ImageServer", {
+          id: "liq_toshin_4040",
+          opacity: 0.75,
+          title: "首都直下地震の被害想定(液状化/都心南部)"
+        });
+
+        // 属性表示ウィンドウのテンプレート（レイヤー2用）
+        var template = new PopupTemplate({
+          title: "SampleData_utf8",
+          fieldInfos: [
+            { fieldName: "BuildingName", label: "物件名", visible: true },
+            { fieldName: "Address", label: "住所", visible: true },
+            { fieldName: "NumberOfRooms", label: "部屋数", visible: true, format: { places: 0, digitSeparator: true } },
+            { fieldName: "Avg_Rent", label: "平均家賃", visible: true, format: { places: 0, digitSeparator: true } },
+            { fieldName: "Built_yr", label: "築年", visible: true, format: { places: 0, digitSeparator: true } },
+            { fieldName: "Structure", label: "構造", visible: true },
+            { fieldName: "Parking", label: "駐車場", visible: true }
+          ]
+        });
+
+        // レイヤー2: 物件情報
+        // FeatureLayer: 座標・属性の文字列情報の配信サービス表示用レイヤー（グラフィック）
+        var layer2 = new FeatureLayer("http://services.arcgis.com/wlVTGRSYTzAbjjiC/arcgis/rest/services/SampleData_utf8/FeatureServer/0", {
+          opacity: 0.85,
+          title: "物件情報",
+          infoTemplate: template,
+          outFields: ["*"],
+          mode: FeatureLayer.MODE_SNAPSHOT
+        });
+
+        // シンボルの定義（レイヤー2用）
+        var symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, 18, new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color([168,0,132,255]), 0.75), new Color([195,93,48,0.8]));
+        var symbol1 = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, 18, new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color([168,0,132,255]), 0.75), new Color([241,238,246,204]));
+        var symbol2 = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, 18, new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color([168,0,132,255]), 0.75), new Color([215,181,216,204]));
+        var symbol3 = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, 18, new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color([168,0,132,255]), 0.75), new Color([223,101,176,204]));
+        var symbol4 = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, 18, new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color([168,0,132,255]), 0.75), new Color([221,28,119,204]));
+        var symbol5 = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, 18, new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color([168,0,132,255]), 0.75), new Color([152,0,67,204]));
+
+        // 数値分類の定義: 物件の平均家賃に応じて表示シンボルを定義（レイヤー2用）
+        var renderer = new ClassBreaksRenderer(symbol, "Avg_Rent");
+        renderer.addBreak(50000, 62000, symbol1);
+        renderer.addBreak(62000, 74000, symbol2);
+        renderer.addBreak(74000, 85000, symbol3);
+        renderer.addBreak(85000, 98000, symbol4);
+        renderer.addBreak(98000, 110000, symbol5);
+
+        // レイヤー2に数値分類を適用
+        layer2.setRenderer(renderer);
+
+        // マップにレイヤーを追加
+        map.addLayers([layer1, layer2]);
+
+      });
+    </script>
+  </head>
+
+  <body>
+    <div id="mapDiv"></div>
+  </body>
+
+</html>

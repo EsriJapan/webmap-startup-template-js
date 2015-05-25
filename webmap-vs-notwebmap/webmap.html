@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="initial-scale=1.0, width=device-width, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="translucent-black">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Web Map</title>
+
+    <link rel="stylesheet" href="http://js.arcgis.com/3.13/esri/css/esri.css">
+    <style>
+      html, body, #mapDiv {
+        height: 100%;
+        margin: 0px;
+        padding: 0px;
+        width: 100%;
+      }
+    </style>
+
+    <script src="http://js.arcgis.com/3.13/"></script>
+    <script>
+      require([
+        "esri/arcgis/utils",
+        "esri/map",
+
+        "dojo/domReady!"
+      ], function(arcgisUtils, Map) {
+
+        // マップの読み込み
+        var deferred = arcgisUtils.createMap("13a2686c389a44c8a3486d769526b1fd", "mapDiv");
+
+      });
+    </script>
+  </head>
+
+  <body>
+    <div id="mapDiv"></div>
+  </body>
+
+</html>

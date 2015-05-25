@@ -1,0 +1,260 @@
+<!doctype html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="">
+	<meta name="author" content="">
+
+	<link rel="shortcut icon" href="//esri.github.io/bootstrap-map-js/doc/images/favicon.ico">
+
+	<link rel="stylesheet" href="//js.arcgis.com/3.13/dijit/themes/claro/claro.css">
+	<link rel="stylesheet" href="//js.arcgis.com/3.13/esri/css/esri.css">
+
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+	<link rel="stylesheet" href="//esri.github.io/bootstrap-map-js/src/css/bootstrapmap.css">
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
+	<style>
+		#state {
+			position: fixed;
+			top: 7px;
+			right: 7px;
+			width: 105px;
+			padding: 8px 10px;
+			background-color: blue;
+			color: white;
+			text-align: center;
+			z-index:2000;
+		}
+		#state.up	{
+			background-color: green;
+		}
+		#state.down	{
+			background-color: red;
+		}
+
+		body {
+		  padding-top: 50px;
+			font-family: "Meiryo";
+		}
+
+		body > .container {
+		  padding-bottom: 20px;
+		}
+
+		#mapDiv {
+		  min-height: 450px;
+		  max-height: 450px;
+		  margin-bottom: 20px;
+		}
+
+		#mapDiv_layers>:first-child .layerTile {
+		  /*border: 1px solid red !important;*/
+		  /*
+		  border-width: 1px !important;
+		  border-style: solid !important; */
+		}
+
+		#tile-count-table-body tr td {
+			text-align: center;
+		}
+
+		#downloading-ui {
+			display: none;
+		}
+
+		#ready-to-download-ui, #downloading-ui {
+		  margin-bottom: 10px;
+		}
+
+		#ready-to-download-ui .btn {
+		  margin-top: 5px;
+		}
+
+		#error-div {
+		  margin-top: 10px;
+		  display: none;
+		}
+
+		.alert {
+		  margin-bottom: 0px;
+		}
+
+		#load-file {
+		    position: relative;
+		    overflow: hidden;
+		}
+
+		#load-file input[type=file] {
+		    position: absolute;
+		    top: 0;
+		    right: 0;
+		    min-width: 100%;
+		    min-height: 100%;
+		    font-size: 999px;
+		    text-align: right;
+		    filter: alpha(opacity=0);
+		    opacity: 0;
+		    background: red;
+		    cursor: inherit;
+		    display: block;
+		}
+
+		/* my css */
+		.arcgisSearch .searchGroup .searchInput {
+			border: 1px solid #ccc;
+		}
+		.arcgisSearch .searchBtn {
+			border: 1px solid #ccc;
+		}
+		.satip {
+	      background-color: white;
+				border: 1px solid #ccc;
+	      border-radius: 4px 4px 4px 4px;
+	      font-size: 7pt;
+	      padding: 5px;
+	      position: absolute;
+	      width: 135px;
+	      z-index: 9999;
+				display: none;
+	    }
+		.esriPopup .titlePane, .esriPopup.light .titlePane, .esriPopup.dark .titlePane {
+			background-color: #bbbbbb;
+		}
+		.esriPopup .titleButton {
+			margin-top: 5px;
+			margin-right: 5px;
+		}
+		.esriPopupWrapper {
+			font-family: "Meiryo" !important;
+			font-size: 12px !important;
+		}
+		#layer_content {
+			font-size: 10px;
+		}
+	</style>
+
+	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!--[if lt IE 9]>
+	  <script src="http://esri.github.io/bootstrap-map-js/bootstrap_v3/docs-assets/js/html5shiv.js"></script>
+	  <script src="http://esri.github.io/bootstrap-map-js/bootstrap_v3/docs-assets/js/respond.min.js"></script>
+	  <![endif]-->
+
+	  <title>ArcGIS Developer セッション デモ</title>
+
+
+		<script>
+			var locationPath = location.pathname.replace(/\/[^/]+$/, "");
+			var dojoConfig = {
+				paths: {
+		        		bootstrap: "//rawgit.com/xsokev/Dojo-Bootstrap/master",
+		        		bootstrapmap: "//esri.github.io/bootstrap-map-js/src/js/bootstrapmap"
+				}
+			};
+		</script>
+
+		<script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+		<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+		<script src="//js.arcgis.com/3.13compact"></script>
+		<script src="js/main.js"></script>
+
+  </head>
+  <body class="claro">
+	<div class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-fixed-top .navbar-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="https://developers.arcgis.com/javascript/"><i class="fa fa-globe"></i> ArcGIS API for JavaScript</a>
+			</div>
+	    </div>	
+	</div>
+
+<div class="container">
+	<div class="row">
+		<div class="col-sm-4">
+		</div>
+		<div class="col-sm-8">
+			<h3><span id="mapTitle">読み込み中...</span></h3>
+			<p id="mapDescription"></p>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-sm-4">
+			<div class="row">
+				<div class="col-sm-12 col-xs-6">
+					<p>検索レイヤー: <b><span id="layerTitle">読み込み中...</span></b></p>
+					<form role="form">
+						<div id="attributes_dropdown" class="btn-group" role="group">
+						  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+								属性フィールド
+						    <span class="caret"></span>
+						  </button>
+						  <ul id="attributes" class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+						    <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>
+						    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>
+						    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
+						    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>-->
+						  </ul>
+						</div>
+						<span id="selected_attribute" style="font-weight: bold;"></span><br><br>
+						<p>
+						  <label for="amount">範囲:</label>
+						  <span type="text" id="amount" style="border: 0; color: #f6931f; font-weight: bold;"><span/>
+						</p>
+						<div id="slider-range"></div><br>
+						<!--<div id="search"></div>-->
+						<button id="service_area_btn" type="button" class="btn btn-success">到達圏解析</button><br><br>
+					</form>
+				</div>
+				<div class="col-sm-12 col-xs-6">
+					<div id="chartNode" style="width:90%;height:250px;"></div>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-8">
+			<!-- Bootstrap-map-js -->
+			<div id="mapDiv"></div>
+		</div>
+	</div>
+
+	<div id="select_layer" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title">検索レイヤーの選択</h4>
+	      </div>
+	      <div class="modal-body">
+
+					<div role="tabpanel">
+
+					  <!-- Nav tabs -->
+					  <ul id="layer_list" class="nav nav-tabs" role="tablist">
+					  </ul>
+
+					  <!-- Tab panes -->
+					  <div id="layer_content" class="tab-content">
+					  </div>
+
+					</div>
+
+	      </div>
+	      <div class="modal-footer">
+	        <button id="layerbtn" type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+	      </div>
+	    </div><!-- /.modal-content -->
+	  </div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+
+</div><!-- /.container -->
+
+</body>
+</html>
