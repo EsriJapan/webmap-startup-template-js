@@ -5,7 +5,6 @@ var field_name;
 var target_fields = [];
 var search;
 var saLayer;
-//var saUrl = "http://logistics.arcgis.com/arcgis/rest/services/World/ServiceAreas/GPServer/GenerateServiceAreas";
 var saUrl = "https://route.arcgis.com/arcgis/rest/services/World/ServiceAreas/NAServer/ServiceArea_World/solveServiceArea"; // World
 //var saUrl = "http://d29gfjzfcfpjgq.cloudfront.net/arcgis/rest/services/Network/network/NAServer/ServiceArea" // Japan
 var resultsLayer, resultsSymbol;
