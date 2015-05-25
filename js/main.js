@@ -7,7 +7,6 @@ var search;
 var saLayer;
 //var saUrl = "http://logistics.arcgis.com/arcgis/rest/services/World/ServiceAreas/GPServer/GenerateServiceAreas";
 var saUrl = "https://route.arcgis.com/arcgis/rest/services/World/ServiceAreas/NAServer/ServiceArea_World/solveServiceArea"; // World
-//var saUrl = "http://d29gfjzfcfpjgq.cloudfront.net/arcgis/rest/services/Network/network/NAServer/ServiceArea" // Japan
 var resultsLayer, resultsSymbol;
 var current_sa;
 var get_maxvalues = false;
@@ -52,8 +51,8 @@ require([
 	"dojo/_base/window",
 
 	"esri/kernel",
-    "dojo/cookie", 
-    "dojo/json", 
+    "dojo/cookie",
+    "dojo/json",
     "dojo/_base/unload",
 
 	"bootstrapmap",
@@ -195,10 +194,10 @@ require([
 			// チャート作成
 			// Create the chart within it's "holding" node
 			chart = new Chart("chartNode");
-			 
+
 			// Set the theme
 			chart.setTheme(theme);
-			 
+
 			// Add the only/default plot
 			chart.addPlot("default", {
 				type: "Columns",
@@ -209,7 +208,7 @@ require([
 			// Create the tooltip
 			var anim_a = new Tooltip(chart, "default");
 			var anim_b = new Highlight(chart, "default");
-			 
+
 			// Add axes
 			//chart.addAxis("x", { labels: label});
 			chart.addAxis("x");
@@ -449,10 +448,10 @@ require([
 			console.log(data);
 			// Define the data
 			var chartData = data;
-			 
+
 			// Add the series of data
 			chart.addSeries("y", chartData);
-			 
+
 			// Render the chart!
 			chart.render();
 
