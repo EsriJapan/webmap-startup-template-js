@@ -17,19 +17,13 @@ Web マップを使用した開発手法を伝えるためのアプリケーシ�
 
 **ArcGIS の開発キットを使用して開発を行う場合は ArcGIS Online 開発者アカウント（[ArcGIS for Developers](https://developers.arcgis.com/en/)）が必要です。開発者アカウント作成ガイドは[こちら](http://www.esrij.com/cgi-bin/wp/wp-content/uploads/documents/signup-esri-developers.pdf)**
 
-※到達圏解析は開発者アカウントでのサインインが必要です。解析を一度実行するごとに 0.5 クレジットを消費します。クレジットの詳細は[こちら](http://www.esrij.com/products/arcgis-online-for-developers/details/#plancost)をご参照ください。
+※到達圏解析は開発者アカウントでのサインインが必要です。解析を一度実行するごとに 0.5 クレジットを消費します。クレジットの詳細は[こちら](http://www.esrij.com/products/arcgis-online-for-developers/details/plans/)をご参照ください。
 
 ## 動作環境
 
-[ArcGIS API for JavaScript](https://developers.arcgis.com/javascript/jshelp/supported_browsers.html)
-* Chrome
-* Firefox
-* Safari
-* Internet Explorer 7+
-
-[Bootstrap](http://getbootstrap.com/getting-started/#support)
-
-[jQuery](https://jquery.com/browser-support/)
+* [ArcGIS API for JavaScript](https://developers.arcgis.com/javascript/jshelp/supported_browsers.html)
+* [Bootstrap](http://getbootstrap.com/getting-started/#support)
+* [jQuery](https://jquery.com/browser-support/)
 
 ## リソース
 
